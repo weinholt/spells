@@ -32,4 +32,4 @@
       (and path (->pathname (path->string path)))))
 
   (define (host-info)
-    (values "unknown" "unknown "(symbol->string (system-type 'os)))))
+    (values "unknown" "unknown" (symbol->string (system-type 'os)))))
