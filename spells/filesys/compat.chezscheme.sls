@@ -58,7 +58,7 @@
           (spells pathname)
           (spells time-lib)
           (prefix (chezscheme) cs:)
-          (only (chezscheme) file-modification-time file-regular?
+          (only (chezscheme) file-regular?
                 file-directory? file-symbolic-link?))
 
   (define dummy
@@ -124,6 +124,11 @@
   (define file-readable? (make-file-check R_OK))
   (define file-writable? (make-file-check W_OK))
   (define file-executable? (make-file-check X_OK))
+
+  (define (file-modification-time pathname)
+    (let ((t (cs:file-modification-time (->fn pathname))))
+      (posix-timestamp->time-utc (cs:time-second t)
+                                 (cs:time-nanosecond t))))
 
   (define file-size-in-bytes
     (let-values (((%stat statbuf-size st_size:offset st_size:type)
