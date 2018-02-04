@@ -62,13 +62,11 @@
                 file-directory? file-symbolic-link?))
 
   (define dummy
-    (begin
-      (case (cs:machine-type)
-        ((i3le ti3le a6le ta6le) (cs:load-shared-object "libc.so.6"))
-        ((i3osx ti3osx) (cs:load-shared-object "libc.dylib"))
-        ((i3nt ti3nt a3nt ta3nt) (cs:load-shared-object "crtdll.dll"))
-        (else (cs:load-shared-object "libc.so")))
-      #f))
+    (case (cs:machine-type)
+      ((i3le ti3le a6le ta6le arm32le) (cs:load-shared-object "libc.so.6"))
+      ((i3osx ti3osx) (cs:load-shared-object "libc.dylib"))
+      ((i3nt ti3nt a3nt ta3nt) (cs:load-shared-object "crtdll.dll"))
+      (else (cs:load-shared-object "libc.so"))))
 
   (define ->fn ->namestring)
 
