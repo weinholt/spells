@@ -37,8 +37,8 @@
 
   (define dummy
     (case (machine-type)
-      ((i3le ti3le a6le ta6le arm32le) (load-shared-object "libc.so.6"))
-      ((i3osx ti3osx) (load-shared-object "libc.dylib"))
+      ((i3le ti3le a6le ta6le arm32le ppc32le) (load-shared-object "libc.so.6"))
+      ((i3osx ti3osx a6osx ta6osx) (load-shared-object "libc.dylib"))
       ((i3nt ti3nt a3nt ta3nt) (load-shared-object "crtdll.dll"))
       (else (load-shared-object "libc.so"))))
 
