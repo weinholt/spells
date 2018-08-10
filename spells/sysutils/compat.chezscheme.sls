@@ -1,5 +1,5 @@
 #!r6rs
-;;; sysutils.ypsilon.sls --- Ypsilon sysutils
+;;; sysutils.chezscheme.sls --- Chez Scheme sysutils
 
 ;; Copyright (C) 2010, 2015 Andreas Rottmann <a.rottmann@gmx.at>
 ;; Copyright (C) 2018 Göran Weinholt <goran@weinholt.se>
@@ -25,7 +25,7 @@
           (only (srfi :13 strings) string-prefix? string-suffix?)
           (spells string-utils)
           (spells filesys)
-          (only (chezscheme) get-env))
+          (only (chezscheme) getenv directory-separator machine-type))
 
   (define (find-exec-path prog)
     (let ((paths (string-split (getenv "PATH")
