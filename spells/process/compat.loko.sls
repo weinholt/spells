@@ -45,7 +45,8 @@
          (errports (and (not stderr) (pipe)))
          (setup (append (list 'stdin (or stdin (car inports))
                               'stdout (or stdout (cdr outports))
-                              'stderr (or stderr (cdr errports)))
+                              'stderr (or stderr (cdr errports))
+                              'env env)
                         setup))
          (proc (apply srfi:make-process setup prog args)))
     (unless stdin
