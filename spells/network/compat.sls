@@ -48,7 +48,7 @@
     (socket-output-port (connection-socket conn)))
 
   (define (close-connection conn)
-    (socket-shutdown (connection-socket conn)))
+    (socket-close (connection-socket conn)))
 
   (define (listener-accept listener)
     (make-connection (socket-accept (listener-socket listener))))
