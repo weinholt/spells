@@ -74,9 +74,12 @@
 
   (define (delete-file pathname)
     (let ((fname (->fn pathname)))
-      (if (posix:file-info-directory? (posix:file-info fname #f))
-          (posix:delete-directory fname)
-          (rnrs:delete-file fname))))
+      (guard (exn
+              ((eq? (condition-who exn) 'file-info)
+               (values)))
+        (if (posix:file-info-directory? (posix:file-info fname #f))
+            (posix:delete-directory fname)
+            (rnrs:delete-file fname)))))
 
   (define (rename-file source-pathname target-pathname)
     (posix:rename-file (->fn source-pathname) (->fn target-pathname)))
@@ -84,7 +87,9 @@
   (define (make-stat-type-checker predicate)
     (lambda (pathname)
       (let ((filename (->fn pathname)))
-        (predicate (posix:file-info filename #f)))))
+        (guard (exn
+                ((eq? (condition-who exn) 'file-info) #f))
+          (predicate (posix:file-info filename #f))))))
 
   (define file-regular? (make-stat-type-checker posix:file-info-regular?))
   (define file-directory? (make-stat-type-checker posix:file-info-directory?))
