@@ -63,7 +63,7 @@
     (let ((keys (hashtable-keys table)))
       (do ((i 0 (+ i 1)))
           ((< i (vector-length keys)))
-        (let ((key (vector-ref keys)))
+        (let ((key (vector-ref keys i)))
           (proc key (hashtable-ref table key #f))))))
 
 )
