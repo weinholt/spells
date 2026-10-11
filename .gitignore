@@ -3,4 +3,5 @@
 /spells/compiled/*.dep
 /spells/*/compiled/*.zo
 /spells/*/compiled/*.dep
+*~
 
