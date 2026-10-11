@@ -26,7 +26,7 @@
 	  close-listener
 	  open-tcp-connection
 	  open-tcp-listener)
-  (import (scheme base)
+  (import (except (rnrs) define-record-type)
 	  (srfi :9)
 	  (srfi :106)
 	  (spells network utils))
