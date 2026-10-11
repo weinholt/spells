@@ -32,22 +32,25 @@
 	  (spells network utils))
 
   (define-record-type connection
-    (make-connection socket)
+    (%make-connection socket input-port output-port)
     connection?
-    (socket connection-socket))
+    (socket connection-socket)
+    (input-port connection-input-port)
+    (output-port connection-output-port))
+
+  (define (make-connection socket)
+    (%make-connection socket
+                      (socket-input-port socket)
+                      (socket-output-port socket)))
 
   (define-record-type listener
     (make-listener socket)
     listener?
     (socket listener-socket))
 
-  (define (connection-input-port conn)
-    (socket-input-port (connection-socket conn)))
-
-  (define (connection-output-port conn)
-    (socket-output-port (connection-socket conn)))
-
   (define (close-connection conn)
+    (close-port (connection-output-port conn))
+    (close-port (connection-input-port conn))
     (socket-close (connection-socket conn)))
 
   (define (listener-accept listener)
