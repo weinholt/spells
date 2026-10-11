@@ -94,12 +94,13 @@
   (define call/errno
     (let ((get-error
            (let ((%errno-location
-                  (case (machine-type)
-                    ((i3le ti3le a6le ta6le arm32le ppc32le)
-                     ;; This works with both glibc and musl
+                  (cond
+                    ((foreign-entry? "__errno_location") ;glibc, musl
                      (foreign-procedure "__errno_location" () void*))
-                    ((i3osx ti3osx a6osx ta6osx)
+                    ((foreign-entry? "__error")          ;macOS, FreeBSD
                      (foreign-procedure "__error" () void*))
+                    ((foreign-entry? "__errno")          ;NetBSD, OpenBSD
+                     (foreign-procedure "__errno" () void*))
                     (else
                      (lambda () (foreign-entry "errno")))))
                  (%strerror (foreign-procedure "strerror" (int) string)))
