@@ -127,10 +127,14 @@
                                  (cs:time-nanosecond t))))
 
   (define (file-size-in-bytes pathname)
-    (let ((port (open-file-input-port (->fn pathname))))
-      (let ((size (cs:file-length port)))
-        (close-port port)
-        size)))
+    (let ((fn (->fn pathname)))
+      (unless (file-regular? fn)
+        (error 'file-size-in-bytes "not a regular file" pathname))
+      (let ((port (open-file-input-port fn)))
+        (dynamic-wind
+          (lambda () #f)
+          (lambda () (cs:file-length port))
+          (lambda () (close-port port))))))
 
 ;;; directory stream
 
