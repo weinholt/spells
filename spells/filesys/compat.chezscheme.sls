@@ -128,30 +128,11 @@
       (posix-timestamp->time-utc (cs:time-second t)
                                  (cs:time-nanosecond t))))
 
-  (define file-size-in-bytes
-    (let-values (((%stat statbuf-size st_size:offset st_size:type)
-                  (case (cs:machine-type)
-                    ((a6le ta6le)
-                     (let ((stat (cs:foreign-procedure "__xstat64" (int string void*) int)))
-                       (values (lambda (pathname statbuf) (stat 1 pathname statbuf))
-                               144 48 'unsigned-64)))
-                    ((arm32le tarm32le)
-                     (let ((stat (cs:foreign-procedure "__xstat64" (int string void*) int)))
-                       (values (lambda (pathname statbuf) (stat 3 pathname statbuf))
-                               104 48 'unsigned-64)))
-                    (else
-                     (values #f #f #f #f)))))
-      (lambda (pathname)
-        (when (not %stat)
-          (error 'file-size-in-bytes "TODO: stat implementation for this machine-type"
-                 (cs:machine-type)))
-        (let* ((&statbuf (cs:foreign-alloc statbuf-size))
-               (status (%stat (->fn pathname) &statbuf)))
-          (unless (zero? status)        ;TODO: check errors
-            (error 'file-size-in-bytes "Error from libc" status))
-          (let ((size (cs:foreign-ref st_size:type &statbuf st_size:offset)))
-            (cs:foreign-free &statbuf)
-            size)))))
+  (define (file-size-in-bytes pathname)
+    (let ((port (open-file-input-port (->fn pathname))))
+      (let ((size (cs:file-length port)))
+        (close-port port)
+        size)))
 
 ;;; directory stream
 
