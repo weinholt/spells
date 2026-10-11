@@ -26,7 +26,7 @@
   (define make-table
     (case-lambda
       (()
-       (make-hashtable))
+       (make-eqv-hashtable))
       ((type)
        (case type
          ((eq) (make-eq-hashtable))
@@ -62,7 +62,7 @@
   (define (table-walk table proc)
     (let ((keys (hashtable-keys table)))
       (do ((i 0 (+ i 1)))
-          ((< i (vector-length keys)))
+          ((= i (vector-length keys)))
         (let ((key (vector-ref keys i)))
           (proc key (hashtable-ref table key #f))))))
 
